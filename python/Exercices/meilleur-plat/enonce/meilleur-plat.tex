@@ -1,0 +1,192 @@
+\documentclass[a4paper,11pt,final]{report}
+
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+
+\usepackage{graphicx}
+\usepackage{tikz,pgf}
+	\usetikzlibrary{arrows,calc}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{fancyhdr}
+\usepackage{array}
+\usepackage{diagbox}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{eurosym}
+\usepackage{hyperref}
+
+% Longueurs
+\setlength\textheight{25cm}
+\setlength\textwidth{17cm}
+\setlength\oddsidemargin{0cm}
+\setlength\evensidemargin{-1.5cm}
+\setlength\parskip{0.2cm}
+\setlength\topmargin{-15mm}
+\setlength\parindent{0.0cm}
+
+% Couleurs
+\definecolor{lightgray}{gray}{0.95}
+\definecolor{lightlightgray}{gray}{0.9}
+
+% Paramétrage des listings
+\lstdefinelanguage{python}
+{morekeywords=[1]{import,from,False,True,and,or,not,if,else,elif,while,break,continue,def,return,global,in,None,for},
+morekeywords=[2]{complex,str,int,set,dict,frozenset,list,float},
+morekeywords=[3]{print,type,sqrt,input,sin,len,del,range,namedtuple},
+morestring=[b]{"},
+morestring=[b]{'},
+morestring=[b]{"""},
+morecomment=[l]{\#},}
+
+\lstset{basicstyle=\scriptsize\tt}
+\lstset{keywordstyle=[1]\color[rgb]{0,0,1}\bfseries}
+\lstset{keywordstyle=[2]\color[rgb]{0.6,0,0}\bfseries}
+\lstset{keywordstyle=[3]\color[rgb]{0,0.6,0}\bfseries}
+\lstset{identifierstyle=\color{black}}
+\lstset{commentstyle=\color[rgb]{0,0.6,0.6}}
+\lstset{stringstyle=\color[rgb]{0.44,0.47,1}}
+\lstset{showstringspaces=false}
+\lstset{showtabs=false}
+\lstset{tabsize=3}
+\lstset{extendedchars=true}
+\lstset{breaklines=true}
+\lstset{postbreak={}}
+\lstset{breakautoindent=true}
+\lstset{breakindent=0pt}
+\lstset{xleftmargin=0.1cm}
+\lstset{xrightmargin=1mm}
+\lstset{frame=tblr,rulecolor=\color[gray]{.4}}
+\lstset{captionpos=b}
+\lstset{aboveskip=0.5cm,belowskip=0cm}
+\lstset{numbers=left}
+\lstset{numberstyle=\tiny}
+\lstset{columns=fixed}
+\lstset{escapechar=§}
+\lstset{language=python}
+
+\lstnewenvironment{stdout}{\lstset{numbers=none,language={},frame=single,backgroundcolor=\color{lightlightgray},framerule=2mm,rulecolor=\color{lightlightgray},xleftmargin=3mm,xrightmargin=3mm,belowskip=2mm}}{}
+
+\lstnewenvironment{pythonoutline}{\lstset{numbers=none,language=python,frame=none,xleftmargin=6mm,xrightmargin=1mm,belowskip=2mm}}{}
+
+% Informations sur le document
+\def\docsection{Exercices Python}
+\def\doctitle{Le meilleur plat}
+\def\docauthor{Sébastien Combéfis}
+\def\docurl{http://www.ukonline.be/exercices/python/}
+
+% Style du document
+\urlstyle{sf}
+
+% Entête et pied de page
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\fancyhead[RO,LE]{\textsc{\bfseries \doctitle}}
+\fancyhead[LO,RE]{\textsc{\bfseries \docsection}}
+\fancyfoot[RO,LE]{\bfseries \thepage~}
+\fancyfoot[LO,RE]{\small \url{\docurl}}
+\renewcommand{\headrulewidth}{1.5pt} 
+\renewcommand{\footrulewidth}{0.5pt}
+
+% Nouvelles commandes
+\newcommand{\code}[1]{{\small\texttt{#1}}}
+
+% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+% Début du document
+\begin{document}
+\thispagestyle{plain} \noindent \rule{\textwidth}{1mm}
+\begin{tabular}{m{3cm}p{13.15cm}}
+\cellcolor{lightgray} \medskip \includegraphics[width=2.5cm]{images/uko-logo.png} \vspace{1.5cm} &
+\cellcolor{lightgray} \begin{minipage}[t]{13cm}
+\begin{flushright}
+\vspace{-12mm} \hfill {\huge\textsc{\bfseries \docsection}} \\\vspace{0.6cm}
+\hfill {\LARGE\sl \doctitle} \\\vspace{0.2cm}
+\hfill {\sl par \docauthor} \\
+\end{flushright}
+\end{minipage}
+\end{tabular} \\
+\rule{\textwidth}{1mm}
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+\section*{Contexte}
+
+Un restaurant souhaiterait connaitre les plats qui ont remporté les plus gros succès durant le réveillon de Noël. Pour ce faire, le personnel du restaurant interroge les clients par rapport aux plats qu'ils ont mangé et leurs demande de noter chaque plat en choisissant un nombre entier compris entre 0 (n'a pas aimé du tout) et 10 (a adoré).
+
+Pour chaque plat, le patron du restaurant possède une liste de votes qu'on peut présenter comme suit :
+
+\begin{center}
+{\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|l|*{3}{c}|}
+	\hline
+	\backslashbox{\bf Plat \hspace{2.3cm}\ }{\bf Client} & Clémence & Quentin & Cédric \\
+	\hline
+	Pavé de biche aux airelles & 9 & 7 & 2 \\
+	Paupiette de Seitan & 4 & 6 & -- \\
+	Foie gras aux St Jacques & -- & 8 & 1 \\
+	Dinde de Noël farcie aux pommes et noix & -- & 9 & 4 \\
+	\hline
+\end{tabular}}
+\end{center}
+
+Vous aurez noté que tous les clients n'ont évidemment pas noté tous les plats, mais seulement ceux qu'ils ont pu gouter. Ce que le patron aimerait savoir, c'est le plat qui a eu la plus haute note et aussi, pour chaque plat, sa note moyenne.
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+\section*{Implémentation}
+
+Définir une fonction \code{stats} qui prend en paramètres l'ensemble des votes pour chaque plat et qui renvoie un dictionnaire contenant l'ensemble des meilleurs plats et la note moyenne pour chaque plat.
+
+L'ensemble des votes est représenté en Python par un dictionnaire dont les clés sont les plats et la valeur est un dictionnaire reprenant les notes de chaque client ayant gouté le plat. L'exemple du contexte est représenté par le dictionnaire suivant :
+
+\begin{lstlisting}[language=python]
+votes = {
+    "Pavé de biche aux airelles": {
+        "Clémence": 9, "Quentin": 7, "Cédric": 2
+    },
+    "Paupiette de Seitan": {
+        "Clémence": 4, "Quentin": 6
+    },
+    "Foie gras aux St Jacques": {
+        "Quentin": 8, "Cédric": 1
+    },
+    "Dinde de Noël farcie aux pommes et noix": {
+        "Quentin": 9, "Cédric": 4
+    }
+}
+\end{lstlisting}
+
+La fonction doit renvoyer un dictionnaire possédant deux clés. La première est \code{bestmeals} et la valeur associée est un ensemble comportant le nom des plats ayant la plus haute note. La deuxième est \code{meals} et la valeur associée est un dictionnaire dont les clés sont les noms des plats et les valeurs sont les notes moyennes associées. Complétez le programme d'exemple suivant, qui doit donc afficher
+
+\begin{stdout}
+{'bestmeals': {'Pavé de biche aux airelles', 'Dinde de Noël farcie aux pommes et noix'}, 'meals': {'Paupiette de Seitan': 5.0, 'Pavé de biche aux airelles': 6.0, 'Dinde de Noël farcie aux pommes et noix': 6.5, 'Foie gras aux St Jacques': 4.5}}
+\end{stdout}
+
+lors de son exécution :
+
+\begin{lstlisting}[language=python]
+def stats(votes):
+    # À compléter
+
+votes = {
+    "Pavé de biche aux airelles": {"Clémence": 9, "Quentin": 7, "Cédric": 2},
+    "Paupiette de Seitan": {"Clémence": 4, "Quentin": 6},
+    "Foie gras aux St Jacques": {"Quentin": 8, "Cédric": 1},
+    "Dinde de Noël farcie aux pommes et noix": {"Quentin": 9, "Cédric": 4}
+}
+print(stats(votes))
+\end{lstlisting}
+
+Vous pouvez ajouter des fonctions additionnelles pour rendre le code plus clair.
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+\section*{Astuces}
+
+On se rappellera qu'un ensemble vide se crée avec \code{set()} et un dictionnaire vide avec \code{\{\}}.
+
+\end{document}

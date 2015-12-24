@@ -1,0 +1,192 @@
+\documentclass[a4paper,11pt,final]{report}
+
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+
+\usepackage{graphicx}
+\usepackage{tikz,pgf}
+	\usetikzlibrary{arrows,calc}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{fancyhdr}
+\usepackage{array}
+\usepackage{diagbox}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{eurosym}
+\usepackage{hyperref}
+
+% Longueurs
+\setlength\textheight{25cm}
+\setlength\textwidth{17cm}
+\setlength\oddsidemargin{0cm}
+\setlength\evensidemargin{-1.5cm}
+\setlength\parskip{0.2cm}
+\setlength\topmargin{-15mm}
+\setlength\parindent{0.0cm}
+
+% Couleurs
+\definecolor{lightgray}{gray}{0.95}
+
+% Paramétrage des listings
+\lstdefinelanguage{python}
+{morekeywords=[1]{import,from,False,True,and,or,not,if,else,elif,while,break,continue,def,return,global,in,None,for},
+morekeywords=[2]{complex,str,int,set,dict,frozenset,list,float},
+morekeywords=[3]{print,type,sqrt,input,sin,len,del,range,namedtuple},
+morestring=[b]{"},
+morestring=[b]{'},
+morestring=[b]{"""},
+morecomment=[l]{\#},}
+
+\lstset{basicstyle=\scriptsize\tt}
+\lstset{keywordstyle=[1]\color[rgb]{0,0,1}\bfseries}
+\lstset{keywordstyle=[2]\color[rgb]{0.6,0,0}\bfseries}
+\lstset{keywordstyle=[3]\color[rgb]{0,0.6,0}\bfseries}
+\lstset{identifierstyle=\color{black}}
+\lstset{commentstyle=\color[rgb]{0,0.6,0.6}}
+\lstset{stringstyle=\color[rgb]{0.44,0.47,1}}
+\lstset{showstringspaces=false}
+\lstset{showtabs=false}
+\lstset{tabsize=3}
+\lstset{extendedchars=true}
+\lstset{breaklines=true}
+\lstset{postbreak={}}
+\lstset{breakautoindent=true}
+\lstset{breakindent=0pt}
+\lstset{xleftmargin=0.1cm}
+\lstset{xrightmargin=1mm}
+\lstset{frame=tblr,rulecolor=\color[gray]{.4}}
+\lstset{captionpos=b}
+\lstset{aboveskip=0.5cm,belowskip=0cm}
+\lstset{numbers=left}
+\lstset{numberstyle=\tiny}
+\lstset{columns=fixed}
+\lstset{escapechar=§}
+\lstset{language=python}
+
+\lstnewenvironment{stdout}{\lstset{numbers=none,language={},frame=single,backgroundcolor=\color{lightlightgray},framerule=2mm,rulecolor=\color{lightlightgray},xleftmargin=3mm,xrightmargin=3mm,belowskip=2mm}}{}
+
+\lstnewenvironment{pythonoutline}{\lstset{numbers=none,language=python,frame=none,xleftmargin=6mm,xrightmargin=1mm,belowskip=2mm}}{}
+
+% Informations sur le document
+\def\docsection{Exercices Python}
+\def\doctitle{La meilleure affaire}
+\def\docauthor{Sébastien Combéfis}
+\def\docurl{http://www.ukonline.be/exercices/python/}
+
+% Style du document
+\urlstyle{sf}
+
+% Entête et pied de page
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\fancyhead[RO,LE]{\textsc{\bfseries \doctitle}}
+\fancyhead[LO,RE]{\textsc{\bfseries \docsection}}
+\fancyfoot[RO,LE]{\bfseries \thepage~}
+\fancyfoot[LO,RE]{\small \url{\docurl}}
+\renewcommand{\headrulewidth}{1.5pt} 
+\renewcommand{\footrulewidth}{0.5pt}
+
+% Nouvelles commandes
+\newcommand{\code}[1]{{\small\texttt{#1}}}
+
+% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+% Début du document
+\begin{document}
+\thispagestyle{plain} \noindent \rule{\textwidth}{1mm}
+\begin{tabular}{m{3cm}p{13.15cm}}
+\cellcolor{lightgray} \medskip \includegraphics[width=2.5cm]{images/uko-logo.png} \vspace{1.5cm} &
+\cellcolor{lightgray} \begin{minipage}[t]{13cm}
+\begin{flushright}
+\vspace{-12mm} \hfill {\huge\textsc{\bfseries \docsection}} \\\vspace{0.6cm}
+\hfill {\LARGE\sl \doctitle} \\\vspace{0.2cm}
+\hfill {\sl par \docauthor} \\
+\end{flushright}
+\end{minipage}
+\end{tabular} \\
+\rule{\textwidth}{1mm}
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+\section*{Contexte}
+
+Noël est là et c'est la fête ! Votre supermarché favori fait des promotions lorsque vous achetez les produits qu'il vend en grosses quantités. Voici par exemple trois produits et leurs prix unitaires en fonction de la quantité commandée :
+
+\begin{center}
+{\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|l|*{3}{c}|}
+	\hline
+	\backslashbox{\bf Produit}{\bf Quantité} & $[1, 10[$ & $[10, 50[$ & $[50, \rightarrow$ \\
+	\hline
+	Clémentine & 0.5~\euro & 0.4~\euro & 0.2~\euro \\
+	Sapin Nordmann 80cm & 25~\euro & 22~\euro & 18~\euro \\
+	Foie gras 100g & 12.5~\euro & 10~\euro & 7~\euro \\
+	\hline
+\end{tabular}}
+\end{center}
+
+Étant donné une commande qui décrit la quantité désirée de chaque article du supermarché, vous devez retrouver le nom de l'article pour lequel vous avez fait la meilleure affaire, c'est-à-dire que le montant économisé par rapport à la situation où vous auriez payé le prix le plus cher est le plus grand.
+
+Par exemple, si on commande $15$ clémentines, $10$ sapins et $2$ boites de foie gras, on peut déterminer que c'est sur les sapins qu'on fait la meilleure affaire, comme le résume le tableau suivant :
+
+\begin{center}
+{\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|l|*{4}{c|}}
+	\hline
+	\bf Produit & \bf Quantité & \bf Prix unitaire & \bf Prix total & \bf Gain \\
+	\hline
+	Clémentine & 15 & 0.4~\euro & 6~\euro & 1.5~\euro \\
+	Sapin Nordmann 80cm & 10 & 22~\euro & 220~\euro & 30~\euro \\
+	Foie gras 100g & 2 & 12.5~\euro & 25~\euro & 0~\euro \\
+	\hline
+\end{tabular}}
+\end{center}
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+\section*{Implémentation}
+
+Définir une fonction \code{bestdeal} qui prend en paramètres la liste des articles en vente avec leurs prix unitaires respectifs et la commande désirée et qui renvoie le nom de l'article pour lequel vous faites la meilleure affaire.
+
+La liste des articles en vente est représentée en Python par une liste de listes. Chaque élément de la liste d'articles est une liste qui contient quatre éléments qui sont le nom de l'article et les trois prix unitaires. L'exemple du contexte est représenté par la liste suivante :
+
+\begin{lstlisting}[language=python]
+items = [
+    ["Clémentine", 0.5, 0.4, 0.2],
+    ["Sapin Nordmann 80cm", 25, 22, 18],
+    ["Foie gras 100g", 12.5, 10, 7]
+]
+\end{lstlisting}
+
+On suppose que les deux listes \code{items} et \code{order} reçues par la fonction \code{bestdeal} ont exactement la même longueur. Complétez le programme d'exemple suivant, qui doit donc afficher \code{Sapin Nordmann 80cm} lors de son exécution :
+
+\begin{lstlisting}[language=python]
+def bestdeal(items, order):
+    # À compléter
+
+items = [
+    ["Clémentine", 0.5, 0.4, 0.2],
+    ["Sapin Nordmann 80cm", 25, 22, 18],
+    ["Foie gras 100g", 12.5, 10, 7]
+]
+order = [15, 10, 2]
+print(bestdeal(items, order))
+\end{lstlisting}
+
+Vous pouvez ajouter des fonctions additionnelles pour rendre le code plus clair.
+
+%% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+\section*{Astuces}
+
+Vous pouvez stocker la valeur $-\infty$ dans une variable de type \code{float} avec l'instruction suivante :
+
+\begin{pythonoutline}
+f = float("-inf")
+\end{pythonoutline}
+
+\end{document}
