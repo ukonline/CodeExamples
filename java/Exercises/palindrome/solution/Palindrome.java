@@ -5,7 +5,7 @@
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Serie1_Ex1
+public class Palindrome
 {
     public static void main (String[] args){
         String str = "engage le jeu que je le gagne";
