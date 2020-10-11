@@ -1,6 +1,6 @@
 # Lazy and on demand generation with generators
 # Auteur : Sébastien Combéfis
-# Version : 9 aout 2020
+# Version : August 9, 2020
 
 import timeit
 import tracemalloc
